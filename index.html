@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Office Multi-Agent Automation — Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Multi-agent system dashboard for automating office workflows: scheduling, summarization, reporting and task routing.">
+
+  <style>
+  bp-widget,
+  #bp-widget {
+    /* --bpw-launcher-button-size: 90px !important; */
+    margin-top: 70px;
+  }
+</style>
+
+
+
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-row">
+        <div class="brand">MultiAgent Office</div>
+        <button id="mode-toggle" class="icon-btn" title="Toggle theme">🌙</button>
+      </div>
+      <nav class="side-nav">
+        <button class="nav-item active" data-panel="dashboard">Dashboard</button>
+        <button class="nav-item" data-panel="agents">Agents</button>
+        <button class="nav-item" data-panel="context">Shared Context</button>
+        <button class="nav-item" data-panel="settings">Settings</button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="user-mini">
+          <div class="avatar">B</div>
+          <div class="user-meta">
+            <div class="name">Bhavik</div>
+            <div class="role">Student · Dev</div>
+          </div>
+        </div>
+        <button id="logout" class="ghost">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="top-left">
+          <h1 id="page-title">Dashboard</h1>
+          <p class="subtitle">Office automation with coordinated role-based agents</p>
+        </div>
+        <div class="top-actions">
+          <button id="open-notifications" class="icon-btn" title="Notifications">🔔<span id="notif-count" class="notif-badge hidden">0</span></button>
+          <button id="open-toasts" class="ghost">Toasts</button>
+        </div>
+      </header>
+
+      <section id="panel-dashboard" class="panel active-panel">
+        <section class="kpi-row" aria-label="overview metrics">
+          <article class="kpi clickable" id="kpi-meetings">
+            <h3>Meetings Today</h3>
+            <p class="kpi-value" data-hook="meetings-count">0</p>
+            <small class="muted">Click to view schedule</small>
+          </article>
+          <article class="kpi clickable" id="kpi-unreads">
+            <h3>Unread Emails</h3>
+            <p class="kpi-value" data-hook="unread-emails">0</p>
+            <small class="muted">Summarizer can reduce these</small>
+          </article>
+          <article class="kpi clickable" id="kpi-tasks">
+            <h3>Open Tasks</h3>
+            <p class="kpi-value" data-hook="open-tasks">0</p>
+            <small class="muted">Routed by Task Router</small>
+          </article>
+          <article class="kpi clickable" id="kpi-satisfaction">
+            <h3>User Satisfaction</h3>
+            <p class="kpi-value" data-hook="satisfaction">—</p>
+            <small class="muted">Based on recent feedback</small>
+          </article>
+        </section>
+
+        <section class="agents-grid" aria-label="role based agents" id="agents-grid">
+          <!-- cards inserted statically — interactive via JS -->
+          <article class="agent-card" data-agent="meeting-agent">
+            <header>
+              <div class="left">
+                <h4>Meeting Agent</h4>
+                <small>Schedules, reschedules, conflict resolver</small>
+              </div>
+              <div class="right status">
+                <span class="badge state">idle</span>
+              </div>
+            </header>
+            <div class="agent-body">
+              <p class="agent-desc">Manages calendars, proposes slots, and resolves overlaps.</p>
+              <div class="agent-actions">
+                <button class="btn primary run" data-agent="meeting-agent">Run</button>
+                <button class="btn ghost expand" data-agent="meeting-agent">Details</button>
+              </div>
+            </div>
+            <div class="agent-footer hidden">
+              <div class="footer-row">
+                <small>Last run: <span class="last-run">never</span></small>
+                <div class="tiny-controls">
+                  <button class="icon-btn settings" title="Settings">⚙️</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="agent-card" data-agent="mail-summarizer">
+            <header>
+              <div class="left">
+                <h4>Mail Summarizer</h4>
+                <small>Condenses long threads into quick bullets</small>
+              </div>
+              <div class="right status">
+                <span class="badge state">idle</span>
+              </div>
+            </header>
+            <div class="agent-body">
+              <p class="agent-desc">Extracts action items, deadlines, and key decisions from email and chat.</p>
+              <div class="agent-actions">
+                <button class="btn primary run" data-agent="mail-summarizer">Summarize</button>
+                <button class="btn ghost expand" data-agent="mail-summarizer">Details</button>
+              </div>
+            </div>
+            <div class="agent-footer hidden">
+              <div class="footer-row">
+                <small>Last run: <span class="last-run">never</span></small>
+                <div class="tiny-controls">
+                  <button class="icon-btn settings" title="Settings">⚙️</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="agent-card" data-agent="report-generator">
+            <header>
+              <div class="left">
+                <h4>Report Generator</h4>
+                <small>Creates weekly & ad-hoc reports</small>
+              </div>
+              <div class="right status">
+                <span class="badge state">idle</span>
+              </div>
+            </header>
+            <div class="agent-body">
+              <p class="agent-desc">Aggregates project data and generates exportable reports (PDF/CSV).</p>
+              <div class="agent-actions">
+                <button class="btn primary run" data-agent="report-generator">Generate</button>
+                <button class="btn ghost expand" data-agent="report-generator">Details</button>
+              </div>
+            </div>
+            <div class="agent-footer hidden">
+              <div class="footer-row">
+                <small>Last run: <span class="last-run">never</span></small>
+                <div class="tiny-controls">
+                  <button class="icon-btn settings" title="Settings">⚙️</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="agent-card" data-agent="task-router">
+            <header>
+              <div class="left">
+                <h4>Task Router</h4>
+                <small>Routes tasks to owners, monitors SLAs</small>
+              </div>
+              <div class="right status">
+                <span class="badge state">idle</span>
+              </div>
+            </header>
+            <div class="agent-body">
+              <p class="agent-desc">Assigns tasks based on availability, skill, and priority; escalates on SLA breach.</p>
+              <div class="agent-actions">
+                <button class="btn primary run" data-agent="task-router">Route</button>
+                <button class="btn ghost expand" data-agent="task-router">Details</button>
+              </div>
+            </div>
+            <div class="agent-footer hidden">
+              <div class="footer-row">
+                <small>Last run: <span class="last-run">never</span></small>
+                <div class="tiny-controls">
+                  <button class="icon-btn settings" title="Settings">⚙️</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="agent-card" data-agent="document-processor">
+            <header>
+              <div class="left">
+                <h4>Document Processor</h4>
+                <small>AI-powered document analysis & extraction</small>
+              </div>
+              <div class="right status">
+                <span class="badge state">idle</span>
+              </div>
+            </header>
+            <div class="agent-body">
+              <p class="agent-desc">Processes documents with OCR, entity extraction, sentiment analysis, and smart classification.</p>
+              <div class="agent-actions">
+                <button class="btn primary run" data-agent="document-processor">Process</button>
+                <button class="btn ghost expand" data-agent="document-processor">Details</button>
+              </div>
+            </div>
+            <div class="agent-footer hidden">
+              <div class="footer-row">
+                <small>Last run: <span class="last-run">never</span></small>
+                <div class="tiny-controls">
+                  <button class="icon-btn settings" title="Settings">⚙️</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="agent-card" data-agent="attendance-analyzer">
+            <header>
+              <div class="left">
+                <h4>Attendance Analyzer</h4>
+                <small>AI-powered attendance tracking & analysis</small>
+              </div>
+              <div class="right status">
+                <span class="badge state">idle</span>
+              </div>
+            </header>
+            <div class="agent-body">
+              <p class="agent-desc">Analyzes employee attendance patterns with daily, weekly, and monthly insights, punch-in/out tracking, and productivity correlation.</p>
+              <div class="agent-actions">
+                <button class="btn primary run" data-agent="attendance-analyzer">Analyze</button>
+                <button class="btn ghost expand" data-agent="attendance-analyzer">Details</button>
+              </div>
+            </div>
+            <div class="agent-footer hidden">
+              <div class="footer-row">
+                <small>Last run: <span class="last-run">never</span></small>
+                <div class="tiny-controls">
+                  <button class="icon-btn settings" title="Settings">⚙️</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="activity" class="activity-feed">
+          <div class="activity-header">
+            <h3>Activity Feed</h3>
+            <button class="btn ghost" id="clear-activity">Clear</button>
+          </div>
+          <ul data-hook="activity-list" class="activity-list" role="list">
+            <li class="activity-item muted">No recent activity.</li>
+          </ul>
+        </section>
+
+        <section id="conflicts" class="conflict-panel">
+          <h3>Detected Conflicts</h3>
+          <div class="conflict-list" data-hook="conflicts">
+            <p class="muted">No conflicts detected.</p>
+          </div>
+        </section>
+
+        <section id="predictive-analytics" class="predictive-panel">
+          <div class="panel-header">
+            <h3>🔮 Predictive Analytics</h3>
+            <div class="panel-actions">
+              <select id="time-range-select" class="time-range-select">
+                <option value="7d">Next 7 Days</option>
+                <option value="14d">Next 2 Weeks</option>
+                <option value="30d">Next Month</option>
+              </select>
+              <button class="btn primary" id="generate-predictions">Generate Predictions</button>
+            </div>
+          </div>
+          <div class="predictions-container" data-hook="predictions">
+            <div class="prediction-placeholder">
+              <div class="placeholder-icon">🔮</div>
+              <p>Click "Generate Predictions" to see AI-powered insights about your future workload, productivity, and potential issues.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="ai-insights" class="ai-insights-panel">
+          <div class="panel-header">
+            <h3>🤖 AI Insights</h3>
+            <div class="panel-actions">
+              <button class="btn secondary" id="refresh-insights">🔄 Refresh</button>
+            </div>
+          </div>
+          <div class="insights-grid">
+            <div class="insight-card">
+              <div class="insight-icon">📊</div>
+              <div class="insight-content">
+                <h4>Productivity Trend</h4>
+                <p>Your productivity has increased by 12% this week compared to last week.</p>
+                <div class="insight-trend positive">↗️ +12%</div>
+              </div>
+            </div>
+            <div class="insight-card">
+              <div class="insight-icon">⏰</div>
+              <div class="insight-content">
+                <h4>Optimal Work Hours</h4>
+                <p>You're most productive between 10 AM - 12 PM and 2 PM - 4 PM.</p>
+                <div class="insight-trend neutral">📈 Peak times</div>
+              </div>
+            </div>
+            <div class="insight-card">
+              <div class="insight-icon">🎯</div>
+              <div class="insight-content">
+                <h4>Focus Score</h4>
+                <p>Your focus score is 87% - excellent concentration levels maintained.</p>
+                <div class="insight-trend positive">🎯 87%</div>
+              </div>
+            </div>
+            <div class="insight-card">
+              <div class="insight-icon">💡</div>
+              <div class="insight-content">
+                <h4>AI Recommendation</h4>
+                <p>Consider scheduling important tasks during your peak productivity hours.</p>
+                <div class="insight-trend neutral">💡 Suggestion</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- Panels for Agents / Context / Settings -->
+      <section id="panel-agents" class="panel">
+        <h2>Agents Control</h2>
+        <p class="muted">Manage and tune each agent here.</p>
+        <div class="agent-list-large">
+          <!-- will reuse small cards visually — same DOM -->
+          <div class="agent-info">Click any agent on the left to run or change settings.</div>
+        </div>
+      </section>
+
+      <section id="panel-context" class="panel">
+        <h2>Shared Context</h2>
+        <div class="context-panel">
+          <div class="context-summary" data-hook="context-summary">
+            <p class="muted">No shared context loaded yet.</p>
+          </div>
+          <div class="context-actions">
+            <button id="btn-import" class="btn primary">Import from Calendar / Email</button>
+            <button id="btn-clear-context" class="btn ghost">Clear Context</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-settings" class="panel">
+        <h2>Settings</h2>
+        <div class="settings-grid">
+          <div class="card">
+            <h4>General</h4>
+            <label class="setting-line">Auto-run idle agents
+              <input id="auto-run" type="checkbox" checked>
+            </label>
+            <label class="setting-line">Conflict auto-resolution
+              <input id="auto-resolve" type="checkbox" checked>
+            </label>
+            <label class="setting-line">Notification sound
+              <input id="notif-sound" type="checkbox">
+            </label>
+          </div>
+          <div class="card">
+            <h4>Integrations</h4>
+            <div id="integrations-panel" class="integrations-panel">
+              <!-- Integration items will be rendered here -->
+            </div>
+          </div>
+          <div class="card">
+            <h4>Monitoring</h4>
+            <div class="monitoring-stats">
+              <div class="stat-item">
+                <span class="stat-label">System Health</span>
+                <div class="health-indicator">
+                  <div class="health-bar">
+                    <div class="health-fill" style="width: 94%"></div>
+                  </div>
+                  <span>94%</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Agent Performance</span>
+                <div class="performance-summary">
+                  <small class="muted">Avg: 91% | Best: Meeting Agent</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Feedback & Overrides</h4>
+            <div class="feedback-summary">
+              <div class="feedback-stats">
+                <span class="feedback-count">Recent feedback: 12</span>
+                <span class="override-count">User overrides: 3</span>
+              </div>
+              <button class="btn ghost" id="view-feedback">View Details</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <small>© <span id="year"></span> MultiAgent Office</small>
+      </footer>
+    </main>
+  </div>
+
+  <!-- toasts / notifications -->
+  <div id="toasts" class="toasts hidden"></div>
+  <div id="notifications" class="notifications hidden">
+    <h4>Notifications</h4>
+    <ul id="notif-list"></ul>
+  </div>
+
+
+ 
+
+  <!-- Status Indicators -->
+  <div class="status-bar" style="position: fixed; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 1000;">
+    <div class="status-item">
+      <span class="status-indicator online"></span>
+      <span style="font-size: 12px; color: var(--muted);">System</span>
+    </div>
+    <div class="status-item">
+      <span class="status-indicator online"></span>
+      <span style="font-size: 12px; color: var(--muted);">Agents</span>
+    </div>
+    <div class="status-item">
+      <span class="status-indicator busy"></span>
+      <span style="font-size: 12px; color: var(--muted);">AI</span>
+    </div>
+  </div>
+
+
+<script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script> <script src="https://files.bpcontent.cloud/2025/10/10/03/20251010035007-G40TZQ2I.js" defer></script>
+     
+    
+
+  <script src="app.js" defer></script>
+  <!-- Backend Integration -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="frontend-integration.js" defer></script>
+  <!-- AI Chatbot -->
+  <script src="ai-chatbot.js" defer></script>
+</body>
+</html>
